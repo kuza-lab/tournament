@@ -1,0 +1,26 @@
+{
+    "name": "phelix/tournaments",
+    "description": "Tournament Manager",
+    "keywords": ["phelix", "tournaments", "fifa"],
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Phelix Juma",
+            "email": "jumaphelix@kuzalab.com"
+        }
+    ],
+    "type": "package",
+    "scripts": {
+      "test": "vendor/bin/phpunit"
+    },
+    "require": {
+    },
+    "require-dev": {
+      "phpunit/phpunit": "6.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Phelix\\Tournaments\\": "src/"
+        }
+    }
+}
