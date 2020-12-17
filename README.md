@@ -1,416 +1,582 @@
-Flutterwave SDK by Phelix Juma
+Tournament by Phelix Juma
 ================================================
 
-This is a PHP SDK wrapper for Flutterwave.
-
-1. [Get started](https://developer.flutterwave.com/docs/getting-started-1)
-2. [API Reference](https://developer.flutterwave.com/reference)
-
+This is a PHP package for tournament management 
 
 Included Services 
 =======================
-- Account
-   - Get balances for all your accounts
-   - Get balance for a specific account
-- OTP
-   - Create (and optionally send) an OTP 
-   - Validate an OTP
-- Payment Plan
-    - Create a payment plan 
-    - Get all your plans 
-    - Get a specific plan
-    - Update a plan
-    - Cancel a plan 
-- Settlement
-    - Get all settlement records
-    - Get a specific settlement record
-- Standard Payment Integration
-    - Initiate a one time payment
-    - Initiate a recurring payment (involves subscribing the payer to a payment plan)
-- Subscriptions
-    - Get list of all subscriptions
-    - Get all subscriptions for a plan
-    - Get all subscriptions by a user
-    - Get a user's subscription in a plan
-    - Get a specific subscription 
-    - Cancel a subscription 
-    - Activate a subscription 
-- Verification
-    - Verifying a transaction
-
-Requirements
-============
-
-* PHP >= 7.1
-* ext-json
-* ext-openssl
-* ext-mbstring
-* ext-openssl
-* ext-iconv
-* ext-curl
-* guzzlehttp/guzzle: "^7.1"
+- Ranking
+   - Single Elimination
+   - Double Elimination
+   - Round Robin
+   - Bracket Groups (round robin, single elimination and double elimination groups)
+- Tournament Generator (coming soon...)
     
 
 Installation
 ============
 
-    composer require phelix/flutterwave
+    composer require phelix/tournaments
 
 How To test
 ===========
 
-To test the package, copy the file "LoadEnv.php.example" in src/tests directory to "LoadEnv.php" and fill in the
-configuration values required and then run the following command
+There are sample test cases shipped with the package. You can run the tests using the command below:
 
     vendor/bin/phpunit test
 
 
 # Documentation
 
-The docs folder has the technical documentation of each of the classes,methods, properties, namespaces et al. In 
-order for you to make references to know what a class does or what a function does or what each of the method 
-parameters mean, then the docs have an elaborate description for each of them. 
+## 1. Ranking in a Round Robin
 
-This being a wrapper for the Flutterwave APIs, you can get more details especially of the expected data structure from [Flutterwave API Reference page](https://developer.flutterwave.com/reference)
-
-This SDK version does not include the services not listed in the "Included Services" section.
-
-
-## 1. Accounts
-
-Handling account balances
+This is where all players play in a given round robin stage ie each player must play against each of the other opponents
 
 ```php
 
 <?php 
 
-    use Phelix\Flutterwave\Flutterwave;
-    use Phelix\Flutterwave\Account;
-    use Phelix\Flutterwave\Exceptions\FlutterwaveException;
+    use Phelix\Tournaments\Leaderboard\RoundRobin;
 
-    try {
-    
-        // We initialize Flutterwave. Only the secret key is compulsory. The rest are optional.
-        $flutterwave = new Flutterwave($_ENV["FLUTTER_WAVE_SECRET_KEY"], $_ENV["FLUTTER_WAVE_ENCRYPTION_KEY"], $_ENV["FLUTTER_WAVE_PUBLIC_KEY"]);
-        
-        $flutterwave->init();
-
-        $account = new Account($flutterwave);
-        
-        //1. Get balances for all accounts
-        $balances = $account->getAllBalances();
-        
-        // 2. Get balance for a specific account (identified by currency)
-        $kes_account_balance = $account->getAccountBalance("KES");
-
-    } catch (FlutterwaveException $exception) {
-        print $exception->getMessage();
-        // log and/or handle exceptions here
-    }
-        
-```
-
-## 1. One Time PIN (OTPs)
-
-Use this where you're using flutterwave to generate and validate your OTPs
-
-```php
-
-<?php 
-
-    use Phelix\Flutterwave\Flutterwave;
-    use Phelix\Flutterwave\OTP;
-    use Phelix\Flutterwave\Exceptions\FlutterwaveException;
-
-    try {
-    
-        // We initialize Flutterwave. Only the secret key is compulsory. The rest are optional.
-        $flutterwave = new Flutterwave($_ENV["FLUTTER_WAVE_SECRET_KEY"], $_ENV["FLUTTER_WAVE_ENCRYPTION_KEY"], $_ENV["FLUTTER_WAVE_PUBLIC_KEY"]);
-        
-        $flutterwave->init();
-
-        $otp = new OTP($flutterwave);
-        
-        //1. Use this to generate and send an OTP to a customer
-        $otp_response = $otp->createOTP("Joehn Doe","john.doe@example.com" ,"0112345678", "JP Enterprises", 5, ['whatsapp', 'sms'], 60, true);
-        
-        // 2. Use this to verify/validate an OTP
-        $otp_val = $otp->validateOTP("otp_reference", 12345);
-
-    } catch (FlutterwaveException $exception) {
-        print $exception->getMessage();
-        // log and/or handle exceptions here
-    }
-```
-
-## 3. Payment Plan
-
-Use this to handle payment plans
-
-```php
-
-<?php 
-
-    use Phelix\Flutterwave\Flutterwave;
-    use Phelix\Flutterwave\PaymentPlan;
-    use Phelix\Flutterwave\Exceptions\FlutterwaveException;
-
-    try {
-    
-        // We initialize Flutterwave. Only the secret key is compulsory. The rest are optional.
-        $flutterwave = new Flutterwave($_ENV["FLUTTER_WAVE_SECRET_KEY"], $_ENV["FLUTTER_WAVE_ENCRYPTION_KEY"], $_ENV["FLUTTER_WAVE_PUBLIC_KEY"]);
-        
-        $flutterwave->init();
-
-        $plan = new PaymentPlan($flutterwave);
-        
-        //1. Use this to create a plan. (This creates a plan named "Test Plan" for KES 1000 to be deducted monthly for 12 months
-        $response = $plan->createPlan("KES", "Test Plan", 1000, "monthly", 12);
-        
-        // 2. Use this to list all your plans
-        $plans = $plan->getPlans();
-        
-        // 3. Use this to get a specific plan
-        $plan = $plan->getOnePlan(1);
-        
-        // 4. Use this to update name of a plan
-        $update = $plan->updatePlan(1, "New Name");
-        
-        // 5. Use this to cancel a plan
-        $cancelled = $plan->cancelPlan(1);
-        
-    } catch (FlutterwaveException $exception) {
-        print $exception->getMessage();
-        // log and/or handle exceptions here
-    }
-```
-
-## 4. Settlement
-
-This is used when handling settlements between the merchant and dlutterwave
-
-```php
-
-<?php 
-
-    use Phelix\Flutterwave\Flutterwave;
-    use Phelix\Flutterwave\Settlement;
-    use Phelix\Flutterwave\Exceptions\FlutterwaveException;
-
-    try {
-    
-        // We initialize Flutterwave. Only the secret key is compulsory. The rest are optional.
-        $flutterwave = new Flutterwave($_ENV["FLUTTER_WAVE_SECRET_KEY"], $_ENV["FLUTTER_WAVE_ENCRYPTION_KEY"], $_ENV["FLUTTER_WAVE_PUBLIC_KEY"]);
-        
-        $flutterwave->init();
-
-        $settlement = new Settlement($flutterwave);
-        
-        //1. Use this to get the list of all settlements
-        $response = $settlement->getSettlements();
-        
-        // 2. Use this to get one settlement
-        $response = $settlement->getOneSettlement(1);
-        
-    } catch (FlutterwaveException $exception) {
-        print $exception->getMessage();
-        // log and/or handle exceptions here
-    }
-```
-
-## 5. Standard Integration
-
-Use this for Flutterwave standard integration. Use this in the section where you initiate payment.
-Check [here](https://developer.flutterwave.com/docs/flutterwave-standard) for more details.
-
-```php
-
-<?php 
-    
-    use Phelix\Flutterwave\Flutterwave;
-    use Phelix\Flutterwave\Standard;
-    use Phelix\Flutterwave\Exceptions\FlutterwaveException;
-
-    try {
-    
-        // We initialize Flutterwave. Only the secret key is compulsory. The rest are optional.
-        $flutterwave = new Flutterwave($_ENV["FLUTTER_WAVE_SECRET_KEY"], $_ENV["FLUTTER_WAVE_ENCRYPTION_KEY"], $_ENV["FLUTTER_WAVE_PUBLIC_KEY"]);
-        
-        $flutterwave->init();
-
-        $standard = new Standard($flutterwave);
-        
-        //1. Use this to initiate a one time payment
-        $response = $standard
-                    ->setCustomizations("JP Enterprises", "Subsidiary of JP Holdings", "https://helixjuma.com.com/avatar.png")
-                    ->setCustomer("Jane Doe", "jane.doe@doedom.com", "+254701234456")
-                    ->setTransactionReference("1234REFJANEDOE")
-                    ->setCurrency("KES")
-                    ->setAmount(1000)
-                    ->setMetaData(["category_id" => 1, 'transaction_type' => "payment_for_doedom"])
-                    ->setRedirectURL("https://phelixjuma.com/flutterwave-ipn")
-                    ->payViaCard() // Use this to pay via card. To use other payment options, check docs for all the other options
-                    ->initiateOneTimePayment();
-        
-        // 2. Use this to initiate a recurrent payment (ie user is subscribed to a payment plan)
-        $response = $standard
-                    ->setCustomizations("JP Enterprises", "Subsidiary of JP Holdings", "https://helixjuma.com.com/avatar.png")
-                    ->setCustomer("Jane Doe", "jane.doe@doedom.com", "+254701234456")
-                    ->setTransactionReference("1234REFJANEDOE")
-                    ->setCurrency("KES")
-                    ->setAmount(1000)
-                    ->setMetaData(["category_id" => 1, 'transaction_type' => "payment_for_doedom"])
-                    ->setRedirectURL("https://phelixjuma.com/flutterwave-ipn")
-                    ->setPaymentPlan(8021) // this is where we set the payment plan id
-                    ->payViaCard() // Use this to pay via card. To use other payment options, check docs for all the other options
-                    ->initiateRecurrentPayment();
-        
-        /**
-         * After a transaction is initiated above, you get a link that you are supposed to redirect the user to. 
-         * Redirect the user to the link where they will do the payments afterwhich Flutterwave redirects them to your redirect url set above
-         * Sample redirect from Flutterwave looks like: https://phelixjuma.com/flutterwave-ipn?status=successful&tx_ref=1234&transaction_id=1686665
-         * Check section below on how to handle and complete transaction in the IPN page.   
-         */
-    } catch (FlutterwaveException $exception) {
-        print $exception->getMessage();
-        // log and/or handle exceptions here
-    }
-```
-
-## 6. IPN (Payment Verification)
-
-Use this in your IPN (the redirect url set when initiating payment)
-
-```php
-
-<?php 
-        
-    use Phelix\Flutterwave\Flutterwave;
-    use Phelix\Flutterwave\Verification;
-    use Phelix\Flutterwave\Exceptions\FlutterwaveException;
-    
-    try {
-        
-        // We initialize Flutterwave. Only the secret key is compulsory. The rest are optional.
-        $flutterwave = new Flutterwave($_ENV["FLUTTER_WAVE_SECRET_KEY"], $_ENV["FLUTTER_WAVE_ENCRYPTION_KEY"], $_ENV["FLUTTER_WAVE_PUBLIC_KEY"]);
-        
-        $flutterwave->init();
-
-        $verification = new Verification($flutterwave);
-        
-        // Your IPN will have query parameters added by Flutterwave. An example is as shown:
-        //  https://phelixjuma.com/flutterwave-ipn?status=successful&tx_ref=1234&transaction_id=1686665
-        
-        // At this stage, you must verify the transaction before confirming that it is successful. Don't just assume it is successful
-        // due to the status parameter in the url
-        
-        $transactionId = sanitize($_GET['transaction_id']); // sanitize() is an arbitrary function. Use your implementation
-        $transactionReference = sanitize($_GET['tx_ref']); // sanitize() is an arbitrary function. Use your implementation
-        
-         // Get the transaction you had initiated by doing a query to your database. getTransaction() is an arbitrary function. 
-        $transaction = getTransaction($transactionReference);
-        
-        if ($transaction) {
-            
-            $response = $verification->verify($transactionId, $transactionReference, $transaction['currency'], $transaction['amount']);
-            
-            // Response is an array of the format $response = ['verified' => true|false,'message' => "response message", 'data'=> <response data>];
-            
-            if ($response['verified'] !== false) {
-                // Verified transaction. Update transaction as successful
-            } else {
-                // Transaction not verified. Get actual status from $response['data']['status']. Check Flutterwave docs for more details.
-            }
-            
-        } else {
-            // transaction does not exist. Possibly a modified IPN. Log the attempt.
-        }
-    } catch (FlutterwaveException $exception) {
-        print $exception->getMessage();
-        // log and/or handle exceptions here
-    }
-```
-
-## 7. Subscription
-
-Use this for subscriptions
-
-```php
-
-<?php 
-        
-    use Phelix\Flutterwave\Flutterwave;
-    use Phelix\Flutterwave\Subscription;
-    use Phelix\Flutterwave\Exceptions\FlutterwaveException;
-    
-    try {
-    
-        // We initialize Flutterwave. Only the secret key is compulsory. The rest are optional.
-        $flutterwave = new Flutterwave($_ENV["FLUTTER_WAVE_SECRET_KEY"], $_ENV["FLUTTER_WAVE_ENCRYPTION_KEY"], $_ENV["FLUTTER_WAVE_PUBLIC_KEY"]);
-        
-        $flutterwave->init();
-
-        $subscription = new Subscription($flutterwave);
-            
-        // 1. Use this to get subscriptions
-        $response = $subscription->getSubscriptions();
-        
-        // 2. Use this to get subscriptions for a plan. Check docs for the other parameters eg pagination
-        $response = $subscription->getPlanSubscriptions(1020);
-        
-        // 3. Use this to get a user's plan subscription. Check docs for the other parameters eg pagination
-        $response = $subscription->getUserPlanSubscriptions(8021, "janedoe@doedom.com");
-        
-        // 4. Get all subscriptions for a user. Check docs for the other parameters eg pagination
-        $response = $subscription->getUserSubscriptions("janedoe@doedom.com");
-        
-        // 5. Get a specific subscription
-        $response = $subscription->getOneSubscription(1);
-        
-        // 6. Cancel a subscription
-        $response = $subscription->cancelSubscription(1);
-        
-        // 7. Activate a subscription
-        $response = $subscription->activateSubscription(1);
-        
-    } catch (FlutterwaveException $exception) {
-        print $exception->getMessage();
-        // log and/or handle exceptions here
-    }
-```
-
-## 6. Responses and Error codes
-
-All responses and error codes are similar to the ones from Flutterwave. Check [here](https://developer.flutterwave.com/docs/flutterwave-errors)
-for details on error codes
-
-Generally, all/most responses follow the standard stucture shown below
-
-```php
-
-    $response = [
-        "success" => true|false,
-        "message" => "",
-        "data" => []
+    // Sample Results Data. Your data is to be passed to this method in this structure:
+    $results = [
+        [
+            "name" => "1.1", // name of the match
+            "scores" => [
+                ["player_id" => "Taru", "score" => 0], // remember to use uid in player id and not the name as in this sample
+                ["player_id" => "Dan", "score" => 0],
+            ]
+        ],
+        [
+            "name" => "1.2",
+            "scores" => [
+                ["player_id" => "Sykes", "score" => 2],
+                ["player_id" => "Phelix", "score" => 0],
+            ]
+        ],
+        [
+            "name" => "1.3",
+            "scores" => [
+                ["player_id" => "Taru", "score" => 2],
+                ["player_id" => "Phelix", "score" => 2],
+            ]
+        ],
+        [
+            "name" => "1.4",
+            "scores" => [
+                ["player_id" => "Dan", "score" => 2],
+                ["player_id" => "Sykes", "score" => 0],
+            ]
+        ],
+        [
+            "name" => "1.5",
+            "scores" => [
+                ["player_id" => "Taru", "score" => 4],
+                ["player_id" => "Sykes", "score" => 5],
+            ]
+        ],
+        [
+            "name" => "1.6",
+            "scores" => [
+                ["player_id" => "Phelix", "score" => 0],
+                ["player_id" => "Dan", "score" => 4],
+            ]
+        ]
     ];
+    
+    $ranks = RoundRobin::generateStageLeaderboard($results);
+    
+    // process the ranks as per your system needs.
+    print_r($ranks);
 ```
 
-In some cases, meta details are also included eg when getting list of items as shown below:
+## 1. Single Elimination
+
+This is where players are in a single stage single elimination ie you lose and you're eliminated immediately
+
 ```php
 
-    $response = [
-        "status" => 'success',
-        "message" => "",
-        "data" => [],
-        "meta  => [
-            "page_info" => [
-                "total" => 44,
-                "current_page" => 1,
-                "total_pages" => 5
-             ]
+<?php 
+
+    use Phelix\Tournaments\Leaderboard\SingleElimination;
+    
+    // Expected data structure with sample
+    $results = [
+    
+        [
+            "round" => 1,
+            "matches" => [
+                [
+                    "name" => "1.1",
+                    "scores" => [
+                        ["player_id" => "JP Omondi", "score" => 1],
+                        ["player_id" => "Timothy Amahaya", "score" => 0],
+                    ]
+                ],
+                [
+                    "name" => "1.2",
+                    "scores" => [
+                        ["player_id" => "Taru", "score" => 2],
+                        ["player_id" => "Phelix Juma", "score" => 0],
+                    ]
+                ],
+                [
+                    "name" => "1.3",
+                    "scores" => [
+                        ["player_id" => "Sykes", "score" => 3],
+                        ["player_id" => "Joanna", "score" => 4],
+                    ]
+                ],
+                [
+                    "name" => "1.4",
+                    "scores" => [
+                        ["player_id" => "Calvin", "score" => 2],
+                        ["player_id" => "Daniel", "score" => 5],
+                    ]
+                ],
+                [
+                    "name" => "1.5",
+                    "scores" => [
+                        ["player_id" => "Michael", "score" => 2],
+                        ["player_id" => "Dan", "score" => 0],
+                    ]
+                ],
+                [
+                    "name" => "1.6",
+                    "scores" => [
+                        ["player_id" => "Sindani", "score" => 3],
+                        ["player_id" => "Jordan", "score" => 2],
+                    ]
+                ]
+            ]
+        ],
+        [
+            "round" => 2,
+            "matches" => [
+                [
+                    "name" => "2.1",
+                    "scores" => [
+                        ["player_id" => "JP Omondi", "score" => 2],
+                        ["player_id" => "Joanna", "score" => 0],
+                    ]
+                ],
+                [
+                    "name" => "2.2",
+                    "scores" => [
+                        ["player_id" => "Michael", "score" => 0],
+                        ["player_id" => "Daniel", "score" => 2],
+                    ]
+                ],
+                [
+                    "name" => "2.3",
+                    "scores" => [
+                        ["player_id" => "Sindani", "score" => 3],
+                        ["player_id" => "Taru", "score" => 0],
+                    ]
+                ]
+            ]
+        ]
     ];
+
+    $ranks = SingleElimination::generateStageLeaderboard($results);
+    
+    // process the ranks as per your system needs
+    print_r($ranks);
+
+    
 ```
 
+## 3. Double Elimination
+
+Use this where it's a single stage tournament ranking where players are in a DE ie lose twice to be eliminated
+
+```php
+
+<?php 
+
+    use Phelix\Tournaments\Leaderboard\DoubleElimination;
+    
+    // Sample data showing the expected data structure
+    $results = [
+        [
+            "bracket"   => "WB",
+            "rounds"    => [
+                [
+
+                    "round" => 1,
+                    "matches" => [
+                        [
+                            "name" => "1.1",
+                            "scores" => [
+                                ["player_id" => "Dan", "score" => 2],
+                                ["player_id" => "Taru", "score" => 0],
+                            ]
+                        ],
+                        [
+                            "name" => "1.2",
+                            "scores" => [
+                                ["player_id" => "Michael", "score" => 1],
+                                ["player_id" => "JP", "score" => 0],
+                            ]
+                        ],
+                        [
+                            "name" => "1.3",
+                            "scores" => [
+                                ["player_id" => "Phelix", "score" => 0],
+                                ["player_id" => "Sykes", "score" => 2],
+                            ]
+                        ],
+                        [
+                            "name" => "1.4",
+                            "scores" => [
+                                ["player_id" => "Calvin", "score" => 1],
+                                ["player_id" => "Jordan", "score" => 4],
+                            ]
+                        ]
+                    ]
+                ],
+                [
+                    "round" => 2,
+                    "matches" => [
+                        [
+                            "name" => "2.1",
+                            "scores" => [
+                                ["player_id" => "Jordan", "score" => 2],
+                                ["player_id" => "Sykes", "score" => 1],
+                            ]
+                        ],
+                        [
+                            "name" => "2.2",
+                            "scores" => [
+                                ["player_id" => "Michael", "score" => 0],
+                                ["player_id" => "Dan", "score" => 5],
+                            ]
+                        ]
+                    ]
+                ],
+                [
+                    "round" => 3,
+                    "matches" => [
+                        [
+                            "name" => "3.1",
+                            "scores" => [
+                                ["player_id" => "Dan", "score" => 1],
+                                ["player_id" => "Jordan", "score" => 0],
+                            ]
+                        ]
+                    ]
+                ],
+                [
+                    "round" => 4,
+                    "matches" => [
+                        [
+                            "name" => "4.1",
+                            "scores" => [
+                                ["player_id" => "Dan", "score" => 2],
+                                ["player_id" => "Phelix", "score" => 4],
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ],
+        [
+            "bracket"   => "LB",
+            "rounds"    => [
+
+                [
+
+                    "round" => 1,
+                    "matches" => [
+                        [
+                            "name" => "1.1L",
+                            "scores" => [
+                                ["player_id" => "Phelix", "score" => 1],
+                                ["player_id" => "Taru", "score" => 0],
+                            ]
+                        ],
+                        [
+                            "name" => "1.2L",
+                            "scores" => [
+                                ["player_id" => "JP", "score" => 2],
+                                ["player_id" => "Calvin", "score" => 0],
+                            ]
+                        ]
+                    ]
+                ],
+                [
+                    "round" => 2,
+                    "matches" => [
+                        [
+                            "name" => "2.1L",
+                            "scores" => [
+                                ["player_id" => "Sykes", "score" => 2],
+                                ["player_id" => "Phelix", "score" => 3],
+                            ]
+                        ],
+                        [
+                            "name" => "2.2L",
+                            "scores" => [
+                                ["player_id" => "Michael", "score" => 2],
+                                ["player_id" => "JP", "score" => 0],
+                            ]
+                        ]
+                    ]
+                ],
+                [
+                    "round" => 3,
+                    "matches" => [
+                        [
+                            "name" => "3.1L",
+                            "scores" => [
+                                ["player_id" => "Phelix", "score" => 2],
+                                ["player_id" => "Michael", "score" => 0],
+                            ]
+                        ]
+                    ]
+                ],
+                [
+                    "round" => 4,
+                    "matches" => [
+                        [
+                            "name" => "4.1L",
+                            "scores" => [
+                                ["player_id" => "Jordan", "score" => 2],
+                                ["player_id" => "Phelix", "score" => 3],
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    ];
+
+    $ranks = DoubleElimination::generateStageLeaderboard($results);
+
+    // Process the ranks as per your system needs
+    print_r($ranks);
+    
+```
+
+## 4. Pool
+
+Use this if, within a stage, players are put into different groups/pools eg Pool A, Pool B et al.
+
+The pools can implement either a round robin, single elimination or double elimination bracket.
+
+The data structure within a pool thus resembles the data structure for its bracket type so the structures already 
+shown for each of the tournament types above would suffice
+
+```php
+
+<?php 
+
+    use Phelix\Tournaments\Leaderboard\Pool;
+
+    /**
+     * This is sample data showing the data structure
+     * This sample is for Round Robin Groups
+     * As can be seen, the data structure for the "rounds" section resembles that one for round robin bracket shown above
+     * You must modify this section depending on the group type eg for SE, you use the SE structure shown in the SE section above 
+     */
+    $results = [
+        [
+            "group"     => 1,
+            "type"      => "RR",
+            "rounds"    => [
+                [
+                    "name" => "1.1",
+                    "scores" => [
+                        ["player_id" => "Timothy", "score" => 0],
+                        ["player_id" => "Michael", "score" => 0],
+                    ]
+                ],
+                [
+                    "name" => "1.2",
+                    "scores" => [
+                        ["player_id" => "Timothy", "score" => 2],
+                        ["player_id" => "Jude", "score" => 0],
+                    ]
+                ],
+                [
+                    "name" => "1.3",
+                    "scores" => [
+                        ["player_id" => "Michael", "score" => 2],
+                        ["player_id" => "Jude", "score" => 3],
+                    ]
+                ]
+            ]
+        ],
+        [
+            "group"     => 2,
+            "type"      => "RR",
+            "rounds"    => [
+                [
+                    "name" => "1.1",
+                    "scores" => [
+                        ["player_id" => "Dan", "score" => 1],
+                        ["player_id" => "Sindani", "score" => 1],
+                    ]
+                ],
+                [
+                    "name" => "1.2",
+                    "scores" => [
+                        ["player_id" => "Dan", "score" => 3],
+                        ["player_id" => "JP", "score" => 0],
+                    ]
+                ],
+                [
+                    "name" => "1.3",
+                    "scores" => [
+                        ["player_id" => "Sindani", "score" => 4],
+                        ["player_id" => "JP", "score" => 3],
+                    ]
+                ]
+            ]
+        ]
+    ];
+
+    $ranks = Pool::generateStageLeaderboard($results);
+
+    // Process the ranks
+    print_r($ranks);
+```
+
+## 5. Multi Stage Tournament
+
+Use this to generate an overall rank for an entire tournament
+
+This can be used where players progress from one stage to the next 
+
+Each stage can implement either of round robin, single elimination, double elimination or bracket groups. 
+Because each stage is independent, it is possible to have different bracket types in each stage.
+
+```php
+
+<?php 
+    
+    use Phelix\Tournaments\Leaderboard\Tournament;
+
+    // Sample data showing the expected data structure.
+    // This sample is for stage 1 implementing single elimination after which the three winners
+    // progress to stage 2 that implements round robin
+    $results = [
+        [
+            "stage"     => 1,
+            "type"      => "SE",
+            "rounds"    => [
+
+                [
+                    "round" => 1,
+                    "matches" => [
+                        [
+                            "name" => "1.1",
+                            "scores" => [
+                                ["player_id" => "Dan", "score" => 2],
+                                ["player_id" => "Kevin", "score" => 0],
+                            ]
+                        ],
+                        [
+                            "name" => "1.2",
+                            "scores" => [
+                                ["player_id" => "Taru", "score" => 0],
+                                ["player_id" => "JP", "score" => 2],
+                            ]
+                        ],
+                        [
+                            "name" => "1.3",
+                            "scores" => [
+                                ["player_id" => "Sykes", "score" => 1],
+                                ["player_id" => "Michael", "score" => 2],
+                            ]
+                        ],
+                        [
+                            "name" => "1.4",
+                            "scores" => [
+                                ["player_id" => "Calvin", "score" => 2],
+                                ["player_id" => "Timothy", "score" => 3],
+                            ]
+                        ],
+                        [
+                            "name" => "1.5",
+                            "scores" => [
+                                ["player_id" => "Jordan", "score" => 5],
+                                ["player_id" => "Aldo", "score" => 3],
+                            ]
+                        ],
+                        [
+                            "name" => "1.6",
+                            "scores" => [
+                                ["player_id" => "Jude", "score" => 1],
+                                ["player_id" => "Phelix", "score" => 0],
+                            ]
+                        ]
+                    ]
+                ],
+                [
+                    "round"     => 2,
+                    "matches"   => [
+                        [
+                            "name" => "2.1",
+                            "scores" => [
+                                ["player_id" => "Timothy", "score" => 2],
+                                ["player_id" => "JP", "score" => 1],
+                            ]
+                        ],
+                        [
+                            "name" => "2.2",
+                            "scores" => [
+                                ["player_id" => "Michael", "score" => 2],
+                                ["player_id" => "Dan", "score" => 0],
+                            ]
+                        ],
+                        [
+                            "name" => "2.3",
+                            "scores" => [
+                                ["player_id" => "Jordan", "score" => 0],
+                                ["player_id" => "Jude", "score" => 3],
+                            ]
+                        ]
+                    ]
+                ]
+
+            ]
+        ],
+        [
+            "stage"     => 2,
+            "type"      => "RR",
+            "rounds"    => [
+                [
+                    "name" => "1.1",
+                    "scores" => [
+                        ["player_id" => "Timothy", "score" => 0],
+                        ["player_id" => "Michael", "score" => 0],
+                    ]
+                ],
+                [
+                    "name" => "1.2",
+                    "scores" => [
+                        ["player_id" => "Timothy", "score" => 2],
+                        ["player_id" => "Jude", "score" => 0],
+                    ]
+                ],
+                [
+                    "name" => "1.3",
+                    "scores" => [
+                        ["player_id" => "Michael", "score" => 2],
+                        ["player_id" => "Jude", "score" => 3],
+                    ]
+                ]
+            ]
+        ]
+    ];
+
+    $ranks = Tournament::generateStageLeaderboard($results);
+
+    // Process the ranks as per your system needs
+    print_r($ranks);
+```
+````
 Credits
 =======
 

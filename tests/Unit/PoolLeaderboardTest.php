@@ -78,7 +78,7 @@ class PoolLeaderboardTest extends TestCase {
 
         $response = Pool::generateStageLeaderboard($results);
 
-        print_r($response);
+        //print_r($response);
 
         $this->assertNotEmpty($response);
     }

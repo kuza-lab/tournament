@@ -2,7 +2,7 @@
 
 
 /**
- * Single Elimination Leaderboard
+ * Pool (Groups) Leaderboard
  * @author Phelix Juma <jumaphelix@kuzalab.com>
  * @copyright (c) 2020, Kuza Lab
  * @package Kuzalab

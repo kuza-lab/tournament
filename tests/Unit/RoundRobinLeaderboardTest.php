@@ -3,7 +3,6 @@
 namespace Phelix\Tournaments\Tests\Unit;
 
 use Phelix\Tournaments\Leaderboard\RoundRobin;
-use Phelix\Tournaments\Leaderboard\SingleElimination;
 use PHPUnit\Framework\TestCase;
 
 class RoundRobinLeaderboardTest extends TestCase {
@@ -67,7 +66,7 @@ class RoundRobinLeaderboardTest extends TestCase {
 
         $response = RoundRobin::generateStageLeaderboard($results);
 
-        //print_r($response);
+        print_r($response);
 
         $this->assertNotEmpty($response);
     }
