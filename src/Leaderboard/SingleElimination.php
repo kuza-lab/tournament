@@ -138,24 +138,31 @@ final class SingleElimination {
             // Same round
             if ($a['round'] == $b['round']) {
 
-                // same round, sort by points
-                if ($a['points'] == $b['points']) {
+                // sort by winners first within the same round
+                if ($a['is_winner'] == $b['is_winner']) {
 
-                    // same points, sort by goal difference
-                    if ($a['total_goal_difference'] == $b['total_goal_difference']) {
+                    // same round, sort by points
+                    if ($a['points'] == $b['points']) {
 
-                        // same goal difference, sort by total score
-                        if ($a['total_score'] == $b['total_score']) {
-                            return 0;
+                        // same points, sort by goal difference
+                        if ($a['total_goal_difference'] == $b['total_goal_difference']) {
+
+                            // same goal difference, sort by total score
+                            if ($a['total_score'] == $b['total_score']) {
+                                return 0;
+                            }
+                            return ($a['total_score'] > $b['total_score']) ? -1 : 1;
+
+                        } else {
+                            return ($a['total_goal_difference'] > $b['total_goal_difference']) ? -1 : 1;
                         }
-                        return ($a['total_score'] > $b['total_score']) ? -1 : 1;
 
                     } else {
-                        return ($a['total_goal_difference'] > $b['total_goal_difference']) ? -1 : 1;
+                        return ($a['points'] > $b['points']) ? -1 : 1;
                     }
 
                 } else {
-                    return ($a['points'] > $b['points']) ? -1 : 1;
+                    return ($a['is_winner'] > $b['is_winner']) ? -1 : 1;
                 }
             } else {
                 return ($a['round'] > $b['round']) ? -1 : 1;

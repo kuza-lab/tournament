@@ -67,7 +67,7 @@ class RoundRobinLeaderboardTest extends TestCase {
 
         $response = RoundRobin::generateStageLeaderboard($results);
 
-        print_r($response);
+        //print_r($response);
 
         $this->assertNotEmpty($response);
     }

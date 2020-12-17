@@ -132,7 +132,7 @@ final class RoundRobin {
         // We rank the players first by rounds
         Utils::stableuasort($scores, function($a, $b) {
 
-            // same round, sort by points
+            // sort by points
             if ($a['points'] == $b['points']) {
 
                 // same points, sort by goal difference
