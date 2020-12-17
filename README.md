@@ -576,7 +576,12 @@ Because each stage is independent, it is possible to have different bracket type
     // Process the ranks as per your system needs
     print_r($ranks);
 ```
-````
+
+Changelog
+=========
+- v1.0.0 First Release
+- v1.0.1 Added a Fix to include draw points in round robin 
+
 Credits
 =======
 
