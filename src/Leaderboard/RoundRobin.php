@@ -40,6 +40,7 @@ final class RoundRobin {
                     "player_id"         => $score['player_id'],
                     "score"             => $score['score'],
                     "is_winner"         => $result['scores'][$player_j]['score'] > $result['scores'][$opponent_player]['score'] ? 1 : 0,
+                    "is_draw"           => $result['scores'][$player_j]['score'] == $result['scores'][$opponent_player]['score'] ? 1 : 0,
                     "goal_difference"   => $result['scores'][$player_j]['score'] - $result['scores'][$opponent_player]['score']
                 ];
                 $player_j++;
@@ -72,6 +73,8 @@ final class RoundRobin {
 
                 if ($score['is_winner'] == 1) {
                     $points += 3;
+                } elseif ($score['is_draw'] == 1) {
+                    $points += 1;
                 }
             }
         }
