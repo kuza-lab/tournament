@@ -35,8 +35,8 @@ final class Tournament {
         foreach ($scores as $score) {
             if ($score['player_id'] == $playerId ) {
 
-                $goalDifference += $score['goal_difference'];
-                $totalScore += $score['score'];
+                $goalDifference += $score['total_goal_difference'];
+                $totalScore += $score['total_score'];
                 $points += $score['points'];
             }
         }
@@ -67,6 +67,9 @@ final class Tournament {
                 case 'DE':
                     $rankedStagePlayers = DoubleElimination::generateStageLeaderboard($stageResults);
                     break;
+                case 'POOL':
+                    $rankedStagePlayers = Pool::generateStageLeaderboard($stageResults);
+                    break;
             }
 
             array_walk($rankedStagePlayers, function(&$value, $key) use($result) {
@@ -75,8 +78,6 @@ final class Tournament {
 
             $players = array_merge($players, $rankedStagePlayers);
         }
-
-        //print_r($players);
 
         // We add the points and total goal difference for each player
         array_walk($players, function(&$value, $key) use($players) {
@@ -88,6 +89,8 @@ final class Tournament {
             $value['total_score'] = $points['total_score'];
 
         });
+
+        $kevin = Utils::searchMultiArrayByKey($players, "player_id", "Kevin");
 
         // We rank the players
         self::rank($players);
