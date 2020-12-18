@@ -2,7 +2,7 @@
 
 
 /**
- * Tournament (multi stage) Leaderboard
+ * Tournament (multi stage) for battle royale Leaderboard
  * @author Phelix Juma <jumaphelix@kuzalab.com>
  * @copyright (c) 2020, Kuza Lab
  * @package Kuzalab
@@ -13,7 +13,7 @@ namespace Phelix\Tournaments\Leaderboard;
 
 use Phelix\Tournaments\Utils;
 
-final class DuelTournament {
+final class BattleRoyaleTournament {
 
     public static function generateStageLeaderboard($results) {
         return self::rankPlayers($results);
@@ -28,19 +28,19 @@ final class DuelTournament {
      */
     private static function calculatePlayerPoints($playerId, $scores) {
 
-        $points = 0;
-        $goalDifference = 0;
-        $totalScore = 0;
+        $cumulative_points = 0;
+        $cumulative_kill_points = 0;
+        $cumulative_position_points = 0;
 
         foreach ($scores as $score) {
             if ($score['player_id'] == $playerId ) {
 
-                $goalDifference += $score['total_goal_difference'];
-                $totalScore += $score['total_score'];
-                $points += $score['points'];
+                $cumulative_kill_points += $score['kill_points'];
+                $cumulative_points += $score['total_points'];
+                $cumulative_position_points += $score['position_points'];
             }
         }
-        return ['points' => $points, 'goal_difference' => $goalDifference, 'total_score' => $totalScore];
+        return ['cumulative_kill_points' => $cumulative_kill_points, 'cumulative_position_points' => $cumulative_position_points, 'cumulative_points' => $cumulative_points];
     }
 
     /**
@@ -58,17 +58,11 @@ final class DuelTournament {
             $rankedStagePlayers = [];
 
             switch ($result['type']) {
-                case 'RR':
-                    $rankedStagePlayers = RoundRobin::generateStageLeaderboard($stageResults);
+                case 'BR':
+                    $rankedStagePlayers = BattleRoyale::generateStageLeaderboard($stageResults);
                     break;
-                case 'SE':
-                    $rankedStagePlayers = SingleElimination::generateStageLeaderboard($stageResults);
-                    break;
-                case 'DE':
-                    $rankedStagePlayers = DoubleElimination::generateStageLeaderboard($stageResults);
-                    break;
-                case 'POOL':
-                    $rankedStagePlayers = DuelPool::generateStageLeaderboard($stageResults);
+                case 'PBR':
+                    $rankedStagePlayers = BattleRoyalePool::generateStageLeaderboard($stageResults);
                     break;
             }
 
@@ -84,17 +78,14 @@ final class DuelTournament {
 
             $points = self::calculatePlayerPoints($value['player_id'], $players);
 
-            $value['points'] = $points['points'];
-            $value['total_goal_difference'] = $points['goal_difference'];
-            $value['total_score'] = $points['total_score'];
+            $value['cumulative_points'] = $points['cumulative_points'];
+            $value['cumulative_kill_points'] = $points['cumulative_kill_points'];
+            $value['cumulative_position_points'] = $points['cumulative_position_points'];
 
         });
 
-        $kevin = Utils::searchMultiArrayByKey($players, "player_id", "Kevin");
-
         // We rank the players
         self::rank($players);
-
 
         // reset keys
         $players = array_values($players);

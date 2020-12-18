@@ -2,10 +2,10 @@
 
 namespace Phelix\Tournaments\Tests\Unit;
 
-use Phelix\Tournaments\Leaderboard\Pool;
+use Phelix\Tournaments\Leaderboard\DuelPool;
 use PHPUnit\Framework\TestCase;
 
-class PoolLeaderboardTest extends TestCase {
+class DuelPoolLeaderboardTest extends TestCase {
 
 
     /**
@@ -14,9 +14,6 @@ class PoolLeaderboardTest extends TestCase {
     public function setUp(): void {
     }
 
-    /**
-     * Test for all balances
-     */
     public function testRanking() {
 
         $results = [
@@ -76,7 +73,7 @@ class PoolLeaderboardTest extends TestCase {
             ]
         ];
 
-        $response = Pool::generateStageLeaderboard($results);
+        $response = DuelPool::generateStageLeaderboard($results);
 
         //print_r($response);
 
@@ -306,9 +303,9 @@ class PoolLeaderboardTest extends TestCase {
 
         ];
 
-        $response = Pool::generateStageLeaderboard($results);
+        $response = DuelPool::generateStageLeaderboard($results);
 
-        print_r($response);
+        //print_r($response);
 
         $this->assertNotEmpty($response);
     }

@@ -371,7 +371,7 @@ shown for each of the tournament types above would suffice
 
 <?php 
 
-    use Phelix\Tournaments\Leaderboard\Pool;
+    use Phelix\Tournaments\Leaderboard\DuelPool;
 
     /**
      * This is sample data showing the data structure
@@ -436,13 +436,13 @@ shown for each of the tournament types above would suffice
         ]
     ];
 
-    $ranks = Pool::generateStageLeaderboard($results);
+    $ranks = DuelPool::generateStageLeaderboard($results);
 
     // Process the ranks
     print_r($ranks);
 ```
 
-## 5. Multi Stage Tournament
+## 5. Multi Stage Duel Tournament
 
 Use this to generate an overall rank for an entire tournament
 
@@ -455,7 +455,7 @@ Because each stage is independent, it is possible to have different bracket type
 
 <?php 
     
-    use Phelix\Tournaments\Leaderboard\Tournament;
+    use Phelix\Tournaments\Leaderboard\DuelTournament;
 
     // Sample data showing the expected data structure.
     // This sample is for stage 1 implementing single elimination after which the three winners
@@ -571,11 +571,144 @@ Because each stage is independent, it is possible to have different bracket type
         ]
     ];
 
-    $ranks = Tournament::generateStageLeaderboard($results);
-
+    $ranks = DuelTournament::generateStageLeaderboard($results);
+    
     // Process the ranks as per your system needs
     print_r($ranks);
 ```
+
+## 6. Battle Royale
+
+Use this to generate ranking in a battle royale match
+
+```php
+
+<?php 
+    
+    use Phelix\Tournaments\Leaderboard\BattleRoyale;
+
+    // Sample data showing the expected data structure
+    $results = [
+        ["player_id" => "Mike", "position" => 1, "kills" => 20],
+        ["player_id" => "Allan", "position" => 2, "kills" => 12],
+        ["player_id" => "Daniel", "position" => 3, "kills" => 15],
+        ["player_id" => "Sidney", "position" => 4, "kills" => 6],
+        ["player_id" => "JP", "position" => 5, "kills" => 3],
+    ];
+
+    $ranks = BattleRoyale::generateStageLeaderboard($results);
+    
+    // Process the ranks as per your system needs
+    print_r($ranks);
+```
+
+## 7. Battle Royale (Pools)
+
+Use this to generate ranking in a battle royale match where players are grouped in different pools
+
+This can be used where players progress from one stage to the next 
+
+Each stage can implement either of round robin, single elimination, double elimination or bracket groups. 
+Because each stage is independent, it is possible to have different bracket types in each stage.
+
+```php
+
+<?php 
+    
+    use Phelix\Tournaments\Leaderboard\BattleRoyalePool;
+
+    // Sample data showing the expected data structure
+    $results = [
+        [
+            "group"     => 1,
+            "matches"   => [
+                ["player_id" => "Mike", "position" => 1, "kills" => 20],
+                ["player_id" => "Allan", "position" => 2, "kills" => 12],
+                ["player_id" => "Daniel", "position" => 3, "kills" => 15],
+                ["player_id" => "Sidney", "position" => 4, "kills" => 6],
+                ["player_id" => "JP", "position" => 5, "kills" => 4],
+            ]
+        ],
+        [
+            "group"     => 2,
+            "matches"   => [
+                ["player_id" => "Taru", "position" => 1, "kills" => 200],
+                ["player_id" => "Jordan", "position" => 2, "kills" => 120],
+                ["player_id" => "JP", "position" => 3, "kills" => 150],
+                ["player_id" => "Timothy", "position" => 4, "kills" => 60],
+                ["player_id" => "Calvin", "position" => 5, "kills" => 20],
+            ]
+        ]
+    ];
+
+    $ranks = BattleRoyalePool::generateStageLeaderboard($results);
+    
+    // Process the ranks as per your system needs
+    print_r($ranks);
+```
+
+## 8. Battle Royale Tournament
+
+Use this to generate ranking in a battle royale tournament
+
+This can be used where players progress from one stage to the next 
+
+Each stage can implement either of battle royale or battle royale pool.
+Because each stage is independent, it is possible to have different bracket types in each stage.
+
+```php
+
+<?php 
+    
+    use Phelix\Tournaments\Leaderboard\BattleRoyaleTournament;
+
+    // Sample data showing the expected data structure
+    $results = [
+    
+        [
+            "stage" => 1,
+            "type"  => "PBR", // battle royale pool
+            "rounds"    => [
+                [
+                    "group"     => 1,
+                    "matches"   => [
+                        ["player_id" => "Mike", "position" => 1, "kills" => 20],
+                        ["player_id" => "Allan", "position" => 2, "kills" => 12],
+                        ["player_id" => "Daniel", "position" => 3, "kills" => 15],
+                        ["player_id" => "Sidney", "position" => 4, "kills" => 6],
+                        ["player_id" => "JP", "position" => 5, "kills" => 3],
+                    ]
+                ],
+                [
+                    "group"     => 2,
+                    "matches"   => [
+                        ["player_id" => "Taru", "position" => 1, "kills" => 200],
+                        ["player_id" => "Jordan", "position" => 2, "kills" => 120],
+                        ["player_id" => "Phelix", "position" => 3, "kills" => 150],
+                        ["player_id" => "Timothy", "position" => 4, "kills" => 60],
+                        ["player_id" => "Calvin", "position" => 5, "kills" => 30],
+                    ]
+                ]
+            ]
+        ],
+        [
+            "stage" => 2,
+            "type"  => "BR", // battle royale
+            "rounds"    => [
+                ["player_id" => "Mike", "position" => 1, "kills" => 345],
+                ["player_id" => "Allan", "position" => 2, "kills" => 235],
+                ["player_id" => "Taru", "position" => 3, "kills" => 79],
+                ["player_id" => "Jordan", "position" => 4, "kills" => 35]
+            ]
+        ]
+    ];
+
+    $ranks = BattleRoyaleTournament::generateStageLeaderboard($results);
+    
+    // Process the ranks as per your system needs
+    print_r($ranks);
+```
+
 
 Changelog
 =========

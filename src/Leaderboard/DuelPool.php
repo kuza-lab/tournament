@@ -2,7 +2,7 @@
 
 
 /**
- * Pool (Groups) Leaderboard
+ * Pool (Groups) for duel tournaments Leaderboard
  * @author Phelix Juma <jumaphelix@kuzalab.com>
  * @copyright (c) 2020, Kuza Lab
  * @package Kuzalab
@@ -13,7 +13,7 @@ namespace Phelix\Tournaments\Leaderboard;
 
 use Phelix\Tournaments\Utils;
 
-final class Pool {
+final class DuelPool {
 
     public static function generateStageLeaderboard($results) {
         return self::rankPlayers($results);

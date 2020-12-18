@@ -526,7 +526,7 @@ class DuelTournamentLeaderboardTest extends TestCase {
 
         $response = DuelTournament::generateStageLeaderboard($results);
 
-        //print_r($response);
+        print_r($response);
 
         $this->assertNotEmpty($response);
     }
