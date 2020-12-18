@@ -13,7 +13,7 @@ namespace Phelix\Tournaments\Leaderboard;
 
 use Phelix\Tournaments\Utils;
 
-final class Tournament {
+final class DuelTournament {
 
     public static function generateStageLeaderboard($results) {
         return self::rankPlayers($results);

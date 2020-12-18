@@ -2,10 +2,10 @@
 
 namespace Phelix\Tournaments\Tests\Unit;
 
-use Phelix\Tournaments\Leaderboard\Tournament;
+use Phelix\Tournaments\Leaderboard\DuelTournament;
 use PHPUnit\Framework\TestCase;
 
-class TournamentLeaderboardTest extends TestCase {
+class DuelTournamentLeaderboardTest extends TestCase {
 
 
     /**
@@ -131,7 +131,7 @@ class TournamentLeaderboardTest extends TestCase {
             ]
         ];
 
-        $response = Tournament::generateStageLeaderboard($results);
+        $response = DuelTournament::generateStageLeaderboard($results);
 
         //print_r($response);
 
@@ -524,7 +524,7 @@ class TournamentLeaderboardTest extends TestCase {
             ]
         ];
 
-        $response = Tournament::generateStageLeaderboard($results);
+        $response = DuelTournament::generateStageLeaderboard($results);
 
         //print_r($response);
 
