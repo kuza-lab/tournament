@@ -714,6 +714,7 @@ Changelog
 =========
 - v1.0.0 First Release
 - v1.0.1 Added a Fix to include draw points in round robin 
+- v1.0.2 Added Battle Royale Matches
 
 Credits
 =======
