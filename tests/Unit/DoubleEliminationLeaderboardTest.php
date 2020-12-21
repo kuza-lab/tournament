@@ -348,4 +348,299 @@ class DoubleEliminationLeaderboardTest extends TestCase
 
         $this->assertNotEmpty($response);
     }
+
+    /**
+     * 16 players DE
+     */
+    public function testRanking3()
+    {
+
+        $results = [
+
+            [
+                "bracket"   => "WB",
+                "rounds"    => [
+                    [
+
+                        "round" => 1,
+                        "matches" => [
+                            [
+                                "name" => "1.1",
+                                "scores" => [
+                                    ["player_id" => "Sykes", "score" => 2],
+                                    ["player_id" => "Jordan", "score" => 0],
+                                ]
+                            ],
+                            [
+                                "name" => "1.2",
+                                "scores" => [
+                                    ["player_id" => "Aldo", "score" => 0],
+                                    ["player_id" => "Jude", "score" => 2],
+                                ]
+                            ],
+                            [
+                                "name" => "1.3",
+                                "scores" => [
+                                    ["player_id" => "kevin", "score" => 1],
+                                    ["player_id" => "Phelix", "score" => 0],
+                                ]
+                            ],
+                            [
+                                "name" => "1.4",
+                                "scores" => [
+                                    ["player_id" => "Jolie", "score" => 2],
+                                    ["player_id" => "Michael", "score" => 0],
+                                ]
+                            ],
+                            [
+                                "name" => "1.5",
+                                "scores" => [
+                                    ["player_id" => "Joanna", "score" => 1],
+                                    ["player_id" => "JP", "score" => 0],
+                                ]
+                            ],
+                            [
+                                "name" => "1.6",
+                                "scores" => [
+                                    ["player_id" => "Timothy", "score" => 0],
+                                    ["player_id" => "Antonio", "score" => 3],
+                                ]
+                            ],
+                            [
+                                "name" => "1.7",
+                                "scores" => [
+                                    ["player_id" => "Taru", "score" => 2],
+                                    ["player_id" => "Calvin", "score" => 0],
+                                ]
+                            ],
+                            [
+                                "name" => "1.8",
+                                "scores" => [
+                                    ["player_id" => "Dan", "score" => 0],
+                                    ["player_id" => "Benjamin", "score" => 2],
+                                ]
+                            ]
+                        ]
+                    ],
+                    [
+                        "round" => 2,
+                        "matches" => [
+                            [
+                                "name" => "2.1",
+                                "scores" => [
+                                    ["player_id" => "Antonio", "score" => 2],
+                                    ["player_id" => "Sykes", "score" => 0],
+                                ]
+                            ],
+                            [
+                                "name" => "2.2",
+                                "scores" => [
+                                    ["player_id" => "Joanna", "score" => 0],
+                                    ["player_id" => "Benjamin", "score" => 2],
+                                ]
+                            ],
+                            [
+                                "name" => "2.3",
+                                "scores" => [
+                                    ["player_id" => "Jolie", "score" => 1],
+                                    ["player_id" => "Taru", "score" => 0],
+                                ]
+                            ],
+                            [
+                                "name" => "2.4",
+                                "scores" => [
+                                    ["player_id" => "Jude", "score" => 0],
+                                    ["player_id" => "Kevin", "score" => 2],
+                                ]
+                            ]
+                        ]
+                    ],
+                    [
+                        "round" => 3,
+                        "matches" => [
+                            [
+                                "name" => "3.1",
+                                "scores" => [
+                                    ["player_id" => "Benjamin", "score" => 2],
+                                    ["player_id" => "Antonio", "score" => 0],
+                                ]
+                            ],
+                            [
+                                "name" => "3.2",
+                                "scores" => [
+                                    ["player_id" => "Jolie", "score" => 0],
+                                    ["player_id" => "Kevin", "score" => 1],
+                                ]
+                            ]
+                        ]
+                    ],
+                    [
+                        "round" => 4,
+                        "matches" => [
+                            [
+                                "name" => "4.1",
+                                "scores" => [
+                                    ["player_id" => "Benjamin", "score" => 2],
+                                    ["player_id" => "Kevin", "score" => 0],
+                                ]
+                            ]
+                        ]
+                    ],
+                    [
+                        "round" => 5,
+                        "matches" => [
+                            [
+                                "name" => "5.1",
+                                "scores" => [
+                                    ["player_id" => "Benjamin", "score" => 4],
+                                    ["player_id" => "Jude", "score" => 2],
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            [
+                "bracket"   => "LB",
+                "rounds"    => [
+
+                    [
+
+                        "round" => 1,
+                        "matches" => [
+                            [
+                                "name" => "1.1L",
+                                "scores" => [
+                                    ["player_id" => "Michael", "score" => 0],
+                                    ["player_id" => "Dan", "score" => 2],
+                                ]
+                            ],
+                            [
+                                "name" => "1.2L",
+                                "scores" => [
+                                    ["player_id" => "JP", "score" => 1],
+                                    ["player_id" => "Calvin", "score" => 0],
+                                ]
+                            ],
+                            [
+                                "name" => "1.3L",
+                                "scores" => [
+                                    ["player_id" => "Aldo", "score" => 2],
+                                    ["player_id" => "Phelix", "score" => 0],
+                                ]
+                            ],
+                            [
+                                "name" => "1.4L",
+                                "scores" => [
+                                    ["player_id" => "Timothy", "score" => 0],
+                                    ["player_id" => "Jordan", "score" => 1],
+                                ]
+                            ]
+                        ]
+                    ],
+                    [
+                        "round" => 2,
+                        "matches" => [
+                            [
+                                "name" => "2.1L",
+                                "scores" => [
+                                    ["player_id" => "Jolie", "score" => 2],
+                                    ["player_id" => "JP", "score" => 0],
+                                ]
+                            ],
+                            [
+                                "name" => "2.2L",
+                                "scores" => [
+                                    ["player_id" => "Taru", "score" => 0],
+                                    ["player_id" => "Aldo", "score" => 3],
+                                ]
+                            ],
+                            [
+                                "name" => "2.3L",
+                                "scores" => [
+                                    ["player_id" => "Sykes", "score" => 1],
+                                    ["player_id" => "Dan", "score" => 0],
+                                ]
+                            ],
+                            [
+                                "name" => "2.4L",
+                                "scores" => [
+                                    ["player_id" => "Jude", "score" => 2],
+                                    ["player_id" => "Jordan", "score" => 0],
+                                ]
+                            ]
+                        ]
+                    ],
+                    [
+                        "round" => 3,
+                        "matches" => [
+                            [
+                                "name" => "3.1L",
+                                "scores" => [
+                                    ["player_id" => "Joanna", "score" => 2],
+                                    ["player_id" => "Aldo", "score" => 0],
+                                ]
+                            ],
+                            [
+                                "name" => "3.2L",
+                                "scores" => [
+                                    ["player_id" => "Sykes", "score" => 0],
+                                    ["player_id" => "Jude", "score" => 3],
+                                ]
+                            ]
+                        ]
+                    ],
+                    [
+                        "round" => 4,
+                        "matches" => [
+                            [
+                                "name" => "4.1L",
+                                "scores" => [
+                                    ["player_id" => "Antonio", "score" => 2],
+                                    ["player_id" => "Joanna", "score" => 0],
+                                ]
+                            ],
+                            [
+                                "name" => "4.2L",
+                                "scores" => [
+                                    ["player_id" => "Jolie", "score" => 0],
+                                    ["player_id" => "Jude", "score" => 3],
+                                ]
+                            ]
+                        ]
+                    ],
+                    [
+                        "round" => 5,
+                        "matches" => [
+                            [
+                                "name" => "5.1L",
+                                "scores" => [
+                                    ["player_id" => "Antonio", "score" => 0],
+                                    ["player_id" => "Jude", "score" => 2],
+                                ]
+                            ]
+                        ]
+                    ],
+                    [
+                        "round" => 6,
+                        "matches" => [
+                            [
+                                "name" => "6.1L",
+                                "scores" => [
+                                    ["player_id" => "Kevin", "score" => 0],
+                                    ["player_id" => "Jude", "score" => 2],
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ];
+
+        $response = DoubleElimination::generateStageLeaderboard($results);
+
+        //print_r($response);
+
+        $this->assertNotEmpty($response);
+    }
 }

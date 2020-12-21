@@ -70,4 +70,37 @@ class RoundRobinLeaderboardTest extends TestCase {
 
         $this->assertNotEmpty($response);
     }
+
+    public function testRanking2() {
+
+        $results = [
+            [
+                "name" => "1.1",
+                "scores" => [
+                    ["player_id" => "Benjamin", "score" => 2],
+                    ["player_id" => "Jolie", "score" => 0],
+                ]
+            ],
+            [
+                "name" => "1.2",
+                "scores" => [
+                    ["player_id" => "Bernard", "score" => 0],
+                    ["player_id" => "Benjamin", "score" => 0],
+                ]
+            ],
+            [
+                "name" => "1.3",
+                "scores" => [
+                    ["player_id" => "Jolie", "score" => 0],
+                    ["player_id" => "Bernard", "score" => 2],
+                ]
+            ]
+        ];
+
+        $response = RoundRobin::generateStageLeaderboard($results);
+
+        //print_r($response);
+
+        $this->assertNotEmpty($response);
+    }
 }
